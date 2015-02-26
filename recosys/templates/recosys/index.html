@@ -1,10 +1,12 @@
 {% if user %}
+    {% load humanize %}
     {% if user.realrate_set.all.count < 1 %}
         <p>You have not rated any movies yet</p>
     {% else %}
-        <p>Here is the summary of your rated movies:</p>
+        <p>So far you have rated {{ user.watched_movies|intcomma }} movies.
+            But your favored movies are (top 10) :</p>
         <ul>
-        {% for real_rate in user.realrate_set.all %}
+        {% for real_rate in user.realrate_set.top_10 %}
             <li><a href="{% url 'detail' real_rate.movie.id %}">{{ real_rate.movie.name }} is rated as {{ real_rate.rate }}</a></li>
         {% endfor %}
         </ul>

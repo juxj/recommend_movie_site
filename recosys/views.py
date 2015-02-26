@@ -5,6 +5,8 @@ from recosys.models import User
 #from django.http import Http404
 #from django.contrib.auth.models import User
 from django.shortcuts import redirect
+import random
+random.seed = 20
 
 
 def login(request):
@@ -13,29 +15,29 @@ def login(request):
 
 def index(request):
     username = request.POST['username']
-    #password = request.POST['password']
-    #user = authenticate(username=username, password=password)
-    user = User.objects.get(name=username)
-    if user.DoesNotExist:
-            #login(request, user)
-            latest_movie_list = User.objects.order_by('-date')[:10]
-            context = {'user': user}
-            return render(request, 'recosys/index.html', context)
-    else:
+    try:
+        user = User.objects.get(name=username)
+        context = {'user': user}
+        return render(request, 'recosys/index.html', context)
+    except User.DoesNotExist:
         return render(request, 'recosys/create_user.html')
 
 
 def new_user(request):
+    #print(request)
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
     email = request.POST['email']
     username = request.POST['username']
     password = request.POST['password']
-    user = User.objects.create_user(username=username, email=email, password=password)
+    user = User.objects.create_user(index=random.random()*10000, name=username)
+    user.password = password
     user.last_name = last_name
     user.first_name = first_name
+    user.email = email
     user.save()
-    return redirect('recosys/index.html')
+    context = {'user':user}
+    return render(request, 'recosys/index.html', context)
 
 
 def detail(request, movie_id):

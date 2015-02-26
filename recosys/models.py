@@ -11,6 +11,7 @@ class MovieManager(models.Manager):
         return movie
 
 
+
 class Movie(models.Model):
     index = models.CharField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
@@ -27,7 +28,7 @@ class Movie(models.Model):
         for real_rate in self.realrate_set.all():
             total_rate += real_rate.rate
             n_rate += 1
-        return n_rate, total_rate*1.0/n_rate
+        return total_rate*1.0/n_rate
 
 
 class UserManager(models.Manager):
@@ -41,29 +42,38 @@ class User(models.Model):
     name = models.CharField(max_length=200, blank=True)
     password = models.FloatField(default=123, blank=True)
     watched_movies = models.IntegerField(default=0)
+    email = models.EmailField(blank=True)
+    last_name = models.CharField(max_length=200, blank=True)
+    first_name = models.CharField(max_length=200, blank=True)
     #rated = JSONField("rated movies", blank=True, default={});
     objects = UserManager()
 
     def top_suggest(self):
-        return self.suggestrate_set.order_by['rate'][:10]
-
-    def rated_movies(self):
-        return self.realrate_set.all().count()
+        return self.suggestrate_set.order_by('rate')[:10]
 
     def __str__(self):
         return self.name
+
+
+class RealRateManager(models.Manager):
+    def order_by_rate(self):
+        return self.order_by('rate').reverse()
+
+    def favored_movies(self):
+        return self.filter(rate__gt=5.0)
+
+    def top_10(self):
+        return self.order_by('rate').reverse()[:10]
 
 
 class RealRate(models.Model):
     user = models.ForeignKey(User)
     movie = models.ForeignKey(Movie)
     rate = models.FloatField()
+    objects = RealRateManager()
 
     def __str__(self):
         return self.user.name, " rated ", self.movie.name, " as ", self.rate
-
-    def movie_avg_rate(self):
-        return "test me"
 
 
 class SuggestRate(models.Model):

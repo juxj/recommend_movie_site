@@ -12,4 +12,4 @@ class Command(BaseCommand):
         for user in User.objects.all():
             user.watched_movies = user.realrate_set.all().count()
             user.save()
-        self.stdout.write("Successfully updated %d user' watch movies")
+        self.stdout.write("Successfully updated user's watched movies")

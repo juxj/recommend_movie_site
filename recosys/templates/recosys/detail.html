@@ -1,3 +1,4 @@
-Index of the movie is: {{ movie.index }}. Rated by {{ movie.realrate_set.all.count }} users,
-average rate is: {{ movie.avg_rate }}
+{% load humanize %}
+Rated by {{ movie.realrate_set.all.count }} users.<br>
+average rate is: {{ movie.avg_rate|floatformat:2 }}<br>
 

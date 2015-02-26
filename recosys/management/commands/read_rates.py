@@ -30,11 +30,15 @@ class Command(BaseCommand):
                     rate = float(rate)
                     try:
                         user = User.objects.get(index=user_id)
+                        user.watched_movies += 1
+                        user.save()
                     except User.DoesNotExist:
                         self.stderr.write("User %s does not exist" % user_id)
                         continue
                     try: 
                         movie = Movie.objects.get(index=movie_id)
+                        movie.rated_users += 1
+                        movie.save()
                     except Movie.DoesNotExist:
                         self.stderr.write("Movie %s does not exist" % movie_id)
                         continue

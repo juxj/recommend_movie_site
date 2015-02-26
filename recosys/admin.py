@@ -24,8 +24,7 @@ class ActiveUserListFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         try:
             n_movies = int(self.value())
-            #return queryset.filter(index__in=RealRate.objects.filter(user__index))
-            return queryset.filter(user__id__exact=20)
+            return queryset.filter(watched_movies__gt=n_movies)
         except TypeError:
             return None
 
@@ -33,14 +32,6 @@ class ActiveUserListFilter(admin.SimpleListFilter):
 class RealRateAdmin(admin.ModelAdmin):
     list_display = ['user', 'movie', 'rate']
     ordering = ['user']
-    actions = ['active_user']
-    #list_filter = (ActiveUserListFilter,)
-
-    def active_user(self, request, queryset):
-        #queryset.filter(user__realrate_set__all__count__gt=25)
-        queryset.filter(rate__gt=5.0)
-        self.message_user(request, "active users are successfully selected")
-    active_user.short_description = "show active users"
 
 
 class UserAdmin(admin.ModelAdmin):
