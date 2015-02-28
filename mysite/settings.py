@@ -65,6 +65,7 @@ DATABASES = {
         'USER': 'xju',
         'PASSWORD': '1234',
         'HOST': 'localhost',
+        #'PORT': '5432',
         #'NAME': os.path.join(BASE_DIR, 'db.mysql'),
     }
 }

@@ -11,5 +11,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for movie in Movie.objects.all():
             movie.rated_users = movie.realrate_set.all().count()
+            movie.avg_rates = movie.avg_rate()
             movie.save()
         self.stdout.write("Successfully updated movie's rated users")

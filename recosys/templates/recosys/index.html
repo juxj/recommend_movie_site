@@ -1,21 +1,40 @@
 {% if user %}
     {% load humanize %}
-    {% if user.realrate_set.all.count < 1 %}
-        <p>You have not rated any movies yet</p>
-    {% else %}
+
         <p>So far you have rated {{ user.watched_movies|intcomma }} movies.
             But your favored movies are (top 10) :</p>
-        <ul>
+        <ul id="rated_list">
         {% for real_rate in user.realrate_set.top_10 %}
-            <li><a href="{% url 'detail' real_rate.movie.id %}">{{ real_rate.movie.name }} is rated as {{ real_rate.rate }}</a></li>
+            <li><a href="{% url 'detail' real_rate.movie.id %}">{{ real_rate.movie.name }} is rated as {{ real_rate.rate|floatformat:2 }}</a></li>
+        {% empty %}
+            <li>Sorry, you have not rated any movies yet</li>
         {% endfor %}
         </ul>
-    {% endif %}
 
-    <p>In any case, we bring those movies to you based on your recent activities. </p>
-        <ul>
+
+    <p>In any case, we bring those movies to you based on your recent activities.
+        <ul id="suggest_list">
         {% for suggest_rate in user.top_suggest %}
-            <li><a href="{% url 'detail' suggest_rate.movie.id %}">{{ suggest_rate.movie.name }} is rated as {{ suggest_rate.rate }}</a></li>
+            <li><a href="{% url 'detail' suggest_rate.movie.id %}">{{ suggest_rate.movie.name }} is rated as {{ suggest_rate.rate|floatformat:2 }}</a></li>
+        {% empty %}
+            <li><a> no suggestions yet </a></li>
         {% endfor %}
         </ul>
+        <button type="button" onclick=trainMe()> Next 10 </button> </p>
+
+    <script>
+        function trainMe(){
+            var list = document.getElementById("suggest_list"),
+            items =list.childNodes;
+            for(var i = 0, length = list.childNodes.length; i < length; i++){
+                list.removeChild(items[i]);
+            }
+            {% for real_rate in user.realrate_set.top_10 %}
+                var node = document.createElement('li');
+                node.innerHTML = "<a href=\"{% url 'detail' real_rate.movie.id %}\">{{ real_rate.movie.name }}"+
+                        " is rated as {{ real_rate.rate }}</a>";
+                list.appendChild(node)
+            {% endfor %}
+        }
+    </script>
 {% endif %}

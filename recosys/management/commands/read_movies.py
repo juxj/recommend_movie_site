@@ -25,7 +25,7 @@ class Command(BaseCommand):
                     index = all_items[0]
                     name = all_items[1]
                     try:
-                        Movie.objects.get(index=index)
+                        Movie.objects.get(unique_id=index)
                     except Movie.DoesNotExist:
                         q = Movie.objects.create_movie(index, name)
                         q.save()

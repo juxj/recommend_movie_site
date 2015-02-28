@@ -1,10 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from recosys.models import Movie
 from recosys.models import User
-#from django.contrib.auth import authenticate, login
-#from django.http import Http404
-#from django.contrib.auth.models import User
-from django.shortcuts import redirect
 import random
 random.seed = 20
 
@@ -36,7 +32,7 @@ def new_user(request):
     user.first_name = first_name
     user.email = email
     user.save()
-    context = {'user':user}
+    context = {'user': user}
     return render(request, 'recosys/index.html', context)
 
 

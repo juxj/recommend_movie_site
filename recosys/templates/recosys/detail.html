@@ -1,4 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.name }}</title>
+</head>
+<body>
+
+
 {% load humanize %}
+<p id="detail">
 Rated by {{ movie.realrate_set.all.count }} users.<br>
 average rate is: {{ movie.avg_rate|floatformat:2 }}<br>
+<font color="#cd5c5c">Add a download link here? </font> <br>
+</p>
 
+<button type="button"
+onclick=testButton()>
+Click Me!</button>
+
+<script>
+    function testButton(){
+        document.getElementById('detail').innerHTML = {{ movie.avg_rate|floatformat:2 }}
+    }
+</script>
+
+</body>
+</html>
